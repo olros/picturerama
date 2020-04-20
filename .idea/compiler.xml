@@ -16,11 +16,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="JavaFxApplication" />
+        <module name="Picturerama" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="JavaFxApplication" target="12" />
+      <module name="Picturerama" target="12" />
     </bytecodeTargetLevel>
   </component>
 </project>

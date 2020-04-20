@@ -35,13 +35,13 @@ You should now have the files you need. In order to be able to run, you have to 
 
 **Steps to compile JavaFX in IntelliJ IDEA:**
 1. MAVEN
-2. JavaFxApplication
+2. Picturerama
 3. Plugins
 4. Double click on javafx:compile
 5. Build project (hammer)
-6. Right click javafx:run and click "Run 'JavaFxApplication'"
+6. Right click javafx:run and click "Run 'Picturerama'"
 
-If you don't have a JavaFxApplication.iml file in the project root, you'll have to add it. Copy and paste the JavaFxApplication.iml file at the bottom of this readme.md
+If you don't have a Picturerama.iml file in the project root, you'll have to add it. Copy and paste the JavaFxApplication.iml file at the bottom of this readme.md
 
 ## JavaFxApplication.iml
 ```

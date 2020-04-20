@@ -70,10 +70,14 @@ public final class Authentication {
 			} else {
 				return false;
 			}
-		} catch (ExceptionInInitializerError | NoClassDefFoundError | PersistenceException e) {
+		} catch (ExceptionInInitializerError | NoClassDefFoundError e) {
 			FileLogger.getLogger().log(Level.FINE, e.getMessage());
 			FileLogger.closeHandler();
 			throw e;
+		} catch (PersistenceException e) {
+			FileLogger.getLogger().log(Level.FINE, e.getMessage());
+			FileLogger.closeHandler();
+			return false;
 		}
 	}
 

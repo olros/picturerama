@@ -43,6 +43,7 @@ public final class PhotoViewer {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.initOwner(ApplicationManager.getStage());
 		stage.setTitle(PHOTO.getTitle());
+		stage.getIcons().add(new Image("file:src/main/App/Images/Logo.png"));
 
 		Label photoTitleLabel = new Label();
 		photoTitleLabel.setText(PHOTO.getTitle());

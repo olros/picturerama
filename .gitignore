@@ -34,7 +34,7 @@
 **/.idea/dataSources.xml
 **/.idea/dataSources/
 **/.idea/jarRepositories.xml
-*.iml
+#*.iml
 log.txt
 
 # File-based project format
