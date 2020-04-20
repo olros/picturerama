@@ -4,6 +4,9 @@ import Database.HibernateClasses.Photo;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +43,7 @@ public final class PDFCreator {
 		photos = AlbumPhotos;
 		albumName = name;
 		document = new Document();
+		PdfWriter.getInstance(document, new FileOutputStream(saveLocation));
 		document.open();
 
 		addHeader();
@@ -100,6 +104,7 @@ public final class PDFCreator {
 
 	/**
 	 * Creates a PdfTable
+	 *
 	 * @param photo the photo that is being added to the table
 	 * @return the finished table
 	 * @throws DocumentException
@@ -107,22 +112,23 @@ public final class PDFCreator {
 	 */
 	private static PdfPTable createTable(Photo photo) throws DocumentException, IOException {
 		Image image = Image.getInstance(photo.getUrl());
-
+		scaleImage(image);
 		PdfPTable photoBox = new PdfPTable(2);
 		photoBox.setWidthPercentage(100);
-		photoBox.setWidths(new int[]{1,2});
+		photoBox.setWidths(new int[]{1, 2});
 		photoBox.addCell(createTextCell(photo.getTitle()));
-		photoBox.addCell(new PdfPCell(image,true));
+		photoBox.addCell(new PdfPCell(image, true));
 
 		return photoBox;
 	}
 
 	/**
 	 * Creates a text cell that is positioned to the left of the table
+	 *
 	 * @param text the text in the cell
 	 * @return the finished cell
 	 */
-	private static PdfPCell createTextCell(String text){
+	private static PdfPCell createTextCell(String text) {
 		PdfPCell cell = new PdfPCell();
 		Paragraph p = new Paragraph(text, imageFont);
 
@@ -133,6 +139,7 @@ public final class PDFCreator {
 
 		return cell;
 	}
+
 	/**
 	 * Scales the images according to the ratio between the height and the width of the image.
 	 *
