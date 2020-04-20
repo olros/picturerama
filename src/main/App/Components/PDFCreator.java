@@ -4,9 +4,6 @@ import Database.HibernateClasses.Photo;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +14,6 @@ import java.util.List;
 public final class PDFCreator {
 
 	private static Document document;
-	private static PdfWriter pdfWriter;
 	private static List<Photo> photos;
 	private static String albumName;
 	private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
@@ -44,11 +40,11 @@ public final class PDFCreator {
 		photos = AlbumPhotos;
 		albumName = name;
 		document = new Document();
-		pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(saveLocation));
-
 		document.open();
+
 		addHeader();
 		addImageContainers();
+
 		document.close();
 	}
 
@@ -111,11 +107,13 @@ public final class PDFCreator {
 	 */
 	private static PdfPTable createTable(Photo photo) throws DocumentException, IOException {
 		Image image = Image.getInstance(photo.getUrl());
+
 		PdfPTable photoBox = new PdfPTable(2);
 		photoBox.setWidthPercentage(100);
 		photoBox.setWidths(new int[]{1,2});
 		photoBox.addCell(createTextCell(photo.getTitle()));
 		photoBox.addCell(new PdfPCell(image,true));
+
 		return photoBox;
 	}
 
@@ -127,10 +125,12 @@ public final class PDFCreator {
 	private static PdfPCell createTextCell(String text){
 		PdfPCell cell = new PdfPCell();
 		Paragraph p = new Paragraph(text, imageFont);
+
 		p.setAlignment(Element.ALIGN_LEFT);
 		cell.addElement(p);
 		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		cell.setBorder(Rectangle.NO_BORDER);
+
 		return cell;
 	}
 	/**
