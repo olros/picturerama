@@ -2,6 +2,8 @@ package Components;
 
 import Database.HibernateClasses.Photo;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.FileOutputStream;
@@ -15,10 +17,12 @@ import java.util.List;
 public final class PDFCreator {
 
 	private static Document document;
+	private static PdfWriter pdfWriter;
 	private static List<Photo> photos;
 	private static String albumName;
-	private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
-	private static Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+	private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
+	private static Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 22, Font.BOLD);
+	private static Font imageFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
 
 	/**
 	 * Private constructor to hinder creation of utility class
@@ -40,7 +44,7 @@ public final class PDFCreator {
 		photos = AlbumPhotos;
 		albumName = name;
 		document = new Document();
-		PdfWriter.getInstance(document, new FileOutputStream(saveLocation));
+		pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(saveLocation));
 
 		document.open();
 		addHeader();
@@ -76,10 +80,6 @@ public final class PDFCreator {
 		Paragraph imagesContainer = new Paragraph();
 		addEmptyLineTo(imagesContainer, 1);
 
-		Paragraph images = new Paragraph("Images", smallFont);
-		addEmptyLineTo(images, 1);
-
-		imagesContainer.add(images);
 		document.add(imagesContainer);
 		addAllImages();
 	}
@@ -92,22 +92,47 @@ public final class PDFCreator {
 	 */
 	private static void addAllImages() throws DocumentException, IOException {
 		for (Photo photo : photos) {
-			Paragraph photoBox = new Paragraph();
-			Paragraph imageBox = new Paragraph();
+			PdfPTable photoBox = createTable(photo);
 
-			Image image = Image.getInstance(photo.getUrl());
-			scaleImage(image);
-			imageBox.add(image);
+			Paragraph emptyLines = new Paragraph();
+			addEmptyLineTo(emptyLines, 4);
 
-			Paragraph titleBox = new Paragraph(photo.getTitle());
-
-			photoBox.add(0, titleBox);
-			photoBox.add(1, imageBox);
-			addEmptyLineTo(photoBox, 2);
 			document.add(photoBox);
+			document.add(emptyLines);
 		}
 	}
 
+	/**
+	 * Creates a PdfTable
+	 * @param photo the photo that is being added to the table
+	 * @return the finished table
+	 * @throws DocumentException
+	 * @throws IOException
+	 */
+	private static PdfPTable createTable(Photo photo) throws DocumentException, IOException {
+		Image image = Image.getInstance(photo.getUrl());
+		PdfPTable photoBox = new PdfPTable(2);
+		photoBox.setWidthPercentage(100);
+		photoBox.setWidths(new int[]{1,2});
+		photoBox.addCell(createTextCell(photo.getTitle()));
+		photoBox.addCell(new PdfPCell(image,true));
+		return photoBox;
+	}
+
+	/**
+	 * Creates a text cell that is positioned to the left of the table
+	 * @param text the text in the cell
+	 * @return the finished cell
+	 */
+	private static PdfPCell createTextCell(String text){
+		PdfPCell cell = new PdfPCell();
+		Paragraph p = new Paragraph(text, imageFont);
+		p.setAlignment(Element.ALIGN_LEFT);
+		cell.addElement(p);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setBorder(Rectangle.NO_BORDER);
+		return cell;
+	}
 	/**
 	 * Scales the images according to the ratio between the height and the width of the image.
 	 *
@@ -115,11 +140,11 @@ public final class PDFCreator {
 	 */
 	private static void scaleImage(Image image) {
 		if (image.getWidth() == image.getHeight()) {
-			image.scaleToFit(300, 300);
+			image.scaleToFit(400, 400);
 		} else if (image.getWidth() > image.getHeight()) {
-			image.scaleToFit(300, 600);
+			image.scaleToFit(400, 800);
 		} else {
-			image.scaleToFit(600, 300);
+			image.scaleToFit(800, 400);
 		}
 	}
 
